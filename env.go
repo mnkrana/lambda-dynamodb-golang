@@ -3,8 +3,8 @@ package lambda_dynamodb_golang
 import "os"
 
 const (
-	KEY_REGION = "dynamodb-region"
-	KEY_TABLE  = "dynamodb-table"
+	KEY_REGION = "dynamodb_region"
+	KEY_TABLE  = "dynamodb_table"
 )
 
 var (
