@@ -12,7 +12,7 @@ var (
 	TABLE  string
 )
 
-func GetAWSConfig() {
+func getAWSConfig() {
 	REGION = os.Getenv(KEY_REGION)
 	TABLE = os.Getenv(KEY_TABLE)
 }

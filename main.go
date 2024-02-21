@@ -10,8 +10,8 @@ import (
 )
 
 func Init() {
-	GetAWSConfig()
-	InitSession()
+	getAWSConfig()
+	initSession()
 }
 
 func PutNewItem(item string) {

@@ -8,7 +8,7 @@ import (
 
 var dynamodbSession *dynamodb.DynamoDB
 
-func InitSession() {
+func initSession() {
 	if dynamodbSession == nil {
 		dynamodbSession = newDynamoDBSession()
 	}
