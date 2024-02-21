@@ -1,4 +1,4 @@
-module github.com/mithyagames/lambda-dynamodb-golang
+module github.com/mnkrana/lambda-dynamodb-golang
 
 go 1.21.6
 
