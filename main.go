@@ -19,9 +19,10 @@ func Init() {
 func PutNewItem(connectionID string) {
 
 	connectionItem := ConnectionItem{
-		UUID:           uuid.New().String(),
-		MyConnectionID: connectionID,
-		State:          int(Ready),
+		UUID:               uuid.New().String(),
+		MyConnectionID:     connectionID,
+		FriendConnectionID: "",
+		State:              int(Ready),
 	}
 
 	attributeValues, _ := dynamodbattribute.MarshalMap(connectionItem)
