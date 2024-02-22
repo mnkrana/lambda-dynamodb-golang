@@ -62,7 +62,7 @@ func UpdateStateByKeyValue(key string, value string, connectionID string, state 
 	}
 }
 
-func UpdateStateByUUID(uuid string, state State) {
+func UpdateItemByUUID(uuid string, key string, value string, action string) {
 	input := &dynamodb.UpdateItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
 			KEY_UUID: {
@@ -71,10 +71,10 @@ func UpdateStateByUUID(uuid string, state State) {
 		},
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
 			":newState": {
-				N: aws.String(strconv.Itoa(state.EnumIndex())),
+				N: aws.String(value),
 			},
 		},
-		UpdateExpression: aws.String("SET " + KEY_State + " = :newState"),
+		UpdateExpression: aws.String(action + " " + key + " = :newState"),
 		TableName:        aws.String(TABLE),
 	}
 
