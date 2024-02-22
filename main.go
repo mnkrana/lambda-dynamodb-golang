@@ -2,7 +2,6 @@ package lambda_dynamodb_golang
 
 import (
 	"log"
-	"strconv"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -38,57 +37,7 @@ func PutNewItem(connectionID string) {
 	}
 }
 
-func UpdateStateByKeyValueN(key string, value string, connectionID string, state State) {
-
-	item := findItemByKeyValue(key, value)
-
-	input := &dynamodb.UpdateItemInput{
-		Key: map[string]*dynamodb.AttributeValue{
-			KEY_UUID: {
-				S: aws.String(item.UUID),
-			},
-		},
-		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-			":newState": {
-				N: aws.String(strconv.Itoa(state.EnumIndex())),
-			},
-		},
-		UpdateExpression: aws.String("SET " + KEY_State + " = :newState"),
-		TableName:        aws.String(TABLE),
-	}
-
-	_, err := dynamodbSession.UpdateItem(input)
-	if err != nil {
-		log.Printf("Error in updaing item %v", err)
-	}
-}
-
-func UpdateStateByKeyValueS(key string, value string, connectionID string, state State) {
-
-	item := findItemByKeyValue(key, value)
-
-	input := &dynamodb.UpdateItemInput{
-		Key: map[string]*dynamodb.AttributeValue{
-			KEY_UUID: {
-				S: aws.String(item.UUID),
-			},
-		},
-		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-			":newState": {
-				S: aws.String(strconv.Itoa(state.EnumIndex())),
-			},
-		},
-		UpdateExpression: aws.String("SET " + KEY_State + " = :newState"),
-		TableName:        aws.String(TABLE),
-	}
-
-	_, err := dynamodbSession.UpdateItem(input)
-	if err != nil {
-		log.Printf("Error in updaing item %v", err)
-	}
-}
-
-func UpdateItemByUUID(uuid string, key string, value string, action string) {
+func UpdateItemByUUIDN(uuid string, key string, value string, action string) {
 	input := &dynamodb.UpdateItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
 			KEY_UUID: {
@@ -98,6 +47,28 @@ func UpdateItemByUUID(uuid string, key string, value string, action string) {
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
 			":newState": {
 				N: aws.String(value),
+			},
+		},
+		UpdateExpression: aws.String(action + " " + key + " = :newState"),
+		TableName:        aws.String(TABLE),
+	}
+
+	_, err := dynamodbSession.UpdateItem(input)
+	if err != nil {
+		log.Printf("Error in updaing item %v", err)
+	}
+}
+
+func UpdateItemByUUIDS(uuid string, key string, value string, action string) {
+	input := &dynamodb.UpdateItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			KEY_UUID: {
+				S: aws.String(uuid),
+			},
+		},
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
+			":newState": {
+				S: aws.String(value),
 			},
 		},
 		UpdateExpression: aws.String(action + " " + key + " = :newState"),
