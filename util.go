@@ -33,6 +33,7 @@ func findItemByKeyValue(key string, value string) ConnectionItem {
 
 	if *result.Count == 0 {
 		log.Println("No key found")
+		return ConnectionItem{}
 	}
 
 	//return first find
@@ -40,10 +41,17 @@ func findItemByKeyValue(key string, value string) ConnectionItem {
 }
 
 func getConnectionItemFromResult(result *dynamodb.ScanOutput) ConnectionItem {
+
+	log.Printf("UUID %v", *result.Items[0][KEY_UUID].S)
+	log.Printf("MyConnectionID %v", *result.Items[0][KEY_MyConnectionID].S)
+	log.Printf("FriendConnectionID %v", *result.Items[0][KEY_FriendConnectionID].S)
+
 	state, err := strconv.Atoi(*result.Items[0][KEY_State].S)
 	if err != nil {
 		log.Println("Error in converting state!")
 	}
+	log.Printf("State %v", state)
+
 	item := ConnectionItem{
 		UUID:               *result.Items[0][KEY_UUID].S,
 		MyConnectionID:     *result.Items[0][KEY_MyConnectionID].S,
