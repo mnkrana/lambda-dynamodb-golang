@@ -38,7 +38,7 @@ func PutNewItem(connectionID string) {
 	}
 }
 
-func UpdateStateByKeyValue(key string, value string, connectionID string, state State) {
+func UpdateStateByKeyValueN(key string, value string, connectionID string, state State) {
 
 	item := findItemByKeyValue(key, value)
 
@@ -51,6 +51,31 @@ func UpdateStateByKeyValue(key string, value string, connectionID string, state 
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
 			":newState": {
 				N: aws.String(strconv.Itoa(state.EnumIndex())),
+			},
+		},
+		UpdateExpression: aws.String("SET " + KEY_State + " = :newState"),
+		TableName:        aws.String(TABLE),
+	}
+
+	_, err := dynamodbSession.UpdateItem(input)
+	if err != nil {
+		log.Printf("Error in updaing item %v", err)
+	}
+}
+
+func UpdateStateByKeyValueS(key string, value string, connectionID string, state State) {
+
+	item := findItemByKeyValue(key, value)
+
+	input := &dynamodb.UpdateItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			KEY_UUID: {
+				S: aws.String(item.UUID),
+			},
+		},
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
+			":newState": {
+				S: aws.String(strconv.Itoa(state.EnumIndex())),
 			},
 		},
 		UpdateExpression: aws.String("SET " + KEY_State + " = :newState"),
