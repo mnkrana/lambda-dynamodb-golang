@@ -14,11 +14,11 @@ func (d State) EnumIndex() int {
 const (
 	KEY_UUID         = "uuid"
 	KEY_ConnectionID = "connectionID"
-	KEY_State        = "state"
+	KEY_State        = "clientState"
 )
 
 type ConnectionItem struct {
 	UUID         string `json:"uuid"`
 	ConnectionID string `json:"connectionID"`
-	State        int    `json:"state"`
+	State        int    `json:"clientState"`
 }
