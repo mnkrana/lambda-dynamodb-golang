@@ -46,7 +46,7 @@ func getConnectionItemFromResult(result *dynamodb.ScanOutput) ConnectionItem {
 	log.Printf("MyConnectionID %v", *result.Items[0][KEY_MyConnectionID].S)
 	log.Printf("FriendConnectionID %v", *result.Items[0][KEY_FriendConnectionID].S)
 
-	state, err := strconv.Atoi(*result.Items[0][KEY_State].S)
+	state, err := strconv.Atoi(*result.Items[0][KEY_State].N)
 	if err != nil {
 		log.Println("Error in converting state!")
 	}
