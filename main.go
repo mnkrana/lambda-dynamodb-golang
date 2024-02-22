@@ -37,6 +37,10 @@ func PutNewItem(connectionID string) {
 	}
 }
 
+func GetItemByConnectionId(connectionID string) ConnectionItem {
+	return findItemByKeyValue(KEY_MyConnectionID, connectionID)
+}
+
 func UpdateItemByUUIDN(uuid string, key string, value string, action string) {
 	input := &dynamodb.UpdateItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
