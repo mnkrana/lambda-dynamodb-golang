@@ -37,13 +37,13 @@ func PutNewItem(connectionID string) {
 	}
 }
 
-func UpdateItem(key string, value string, connectionID string, state State) {
+func UpdateStateByKeyValue(key string, value string, connectionID string, state State) {
 
 	primaryKey := findPrimaryKeyValue(key, value)
 
 	input := &dynamodb.UpdateItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
-			"uuid": {
+			KEY_UUID: {
 				S: aws.String(primaryKey),
 			},
 		},
@@ -52,7 +52,29 @@ func UpdateItem(key string, value string, connectionID string, state State) {
 				N: aws.String(strconv.Itoa(state.EnumIndex())),
 			},
 		},
-		UpdateExpression: aws.String("SET state = :newState"),
+		UpdateExpression: aws.String("SET " + KEY_State + " = :newState"),
+		TableName:        aws.String(TABLE),
+	}
+
+	_, err := dynamodbSession.UpdateItem(input)
+	if err != nil {
+		log.Printf("Error in updaing item %v", err)
+	}
+}
+
+func UpdateStateByUUID(uuid string, state State) {
+	input := &dynamodb.UpdateItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			KEY_UUID: {
+				S: aws.String(uuid),
+			},
+		},
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
+			":newState": {
+				N: aws.String(strconv.Itoa(state.EnumIndex())),
+			},
+		},
+		UpdateExpression: aws.String("SET " + KEY_State + " = :newState"),
 		TableName:        aws.String(TABLE),
 	}
 
@@ -67,7 +89,7 @@ func DeleteItemByKeyValue(key string, value string) {
 
 	input := &dynamodb.DeleteItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
-			"uuid": {
+			KEY_UUID: {
 				S: aws.String(primaryKey),
 			},
 		},
@@ -83,10 +105,15 @@ func DeleteItemByKeyValue(key string, value string) {
 	}
 }
 
-func findPrimaryKeyValue(key string, value string) string {
-	filt := expression.Name(key).Equal(expression.Value(value))
+// return finder's uuid and other found uuid
+func FindOtherReadyItem(key string, value string) (string, string, bool) {
+	myPrimaryKey := findPrimaryKeyValue(key, value)
 
-	expr, err := expression.NewBuilder().WithFilter(filt).Build()
+	filt1 := expression.Name(KEY_UUID).NotEqual(expression.Value(myPrimaryKey))
+	filt2 := expression.Name(KEY_State).Equal(expression.Value(Ready))
+
+	expr, err := expression.NewBuilder().WithCondition(filt1.And(filt2)).Build()
+
 	if err != nil {
 		log.Fatalf("Got error building expression: %s", err)
 	}
@@ -103,5 +130,11 @@ func findPrimaryKeyValue(key string, value string) string {
 		log.Fatalf("Query API call failed: %s", err)
 	}
 
-	return *result.Items[0]["uuid"].S
+	if *result.Count == 0 {
+		log.Println("No ready item found")
+		return myPrimaryKey, "", false
+	}
+
+	//return first find
+	return myPrimaryKey, *result.Items[0]["uuid"].S, true
 }
