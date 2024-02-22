@@ -21,7 +21,7 @@ func PutNewItem(connectionID string) {
 	connectionItem := ConnectionItem{
 		UUID:               uuid.New().String(),
 		MyConnectionID:     connectionID,
-		FriendConnectionID: "",
+		FriendConnectionID: "Empty",
 		State:              int(Ready),
 	}
 
