@@ -127,7 +127,7 @@ func FindOtherReadyItem(key string, value string) (string, string, bool) {
 
 	result, err := dynamodbSession.Scan(params)
 	if err != nil {
-		log.Fatalf("Query API call failed: %s", err)
+		log.Printf("Query API call failed: %s", err)
 	}
 
 	if *result.Count == 0 {
