@@ -110,9 +110,9 @@ func FindOtherReadyItem(key string, value string) (string, string, bool) {
 	myPrimaryKey := findPrimaryKeyValue(key, value)
 
 	filt1 := expression.Name(KEY_UUID).NotEqual(expression.Value(myPrimaryKey))
-	filt2 := expression.Name(KEY_State).Equal(expression.Value(Ready))
+	filt2 := expression.Name(KEY_State).Equal(expression.Value(Ready.EnumIndex()))
 
-	expr, err := expression.NewBuilder().WithCondition(filt1.And(filt2)).Build()
+	expr, err := expression.NewBuilder().WithFilter(filt1.And(filt2)).Build()
 
 	if err != nil {
 		log.Fatalf("Got error building expression: %s", err)

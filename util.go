@@ -9,6 +9,8 @@ import (
 )
 
 func findPrimaryKeyValue(key string, value string) string {
+	log.Printf("Find Primary key value of %v", value)
+
 	filt := expression.Name(key).Equal(expression.Value(value))
 
 	expr, err := expression.NewBuilder().WithFilter(filt).Build()
@@ -25,11 +27,11 @@ func findPrimaryKeyValue(key string, value string) string {
 
 	result, err := dynamodbSession.Scan(params)
 	if err != nil {
-		log.Fatalf("Query API call failed: %s", err)
+		log.Printf("Query API call failed: %s", err)
 	}
 
 	if *result.Count == 0 {
-		log.Fatal("No key found")
+		log.Println("No key found")
 	}
 
 	//return first find
