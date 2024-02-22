@@ -19,9 +19,9 @@ func Init() {
 func PutNewItem(connectionID string) {
 
 	connectionItem := ConnectionItem{
-		UUID:         uuid.New().String(),
-		ConnectionID: connectionID,
-		State:        int(Ready),
+		UUID:           uuid.New().String(),
+		MyConnectionID: connectionID,
+		State:          int(Ready),
 	}
 
 	attributeValues, _ := dynamodbattribute.MarshalMap(connectionItem)
@@ -39,12 +39,12 @@ func PutNewItem(connectionID string) {
 
 func UpdateStateByKeyValue(key string, value string, connectionID string, state State) {
 
-	primaryKey := findPrimaryKeyValue(key, value)
+	item := findItemByKeyValue(key, value)
 
 	input := &dynamodb.UpdateItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
 			KEY_UUID: {
-				S: aws.String(primaryKey),
+				S: aws.String(item.UUID),
 			},
 		},
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
@@ -85,12 +85,12 @@ func UpdateItemByUUID(uuid string, key string, value string, action string) {
 }
 
 func DeleteItemByKeyValue(key string, value string) {
-	primaryKey := findPrimaryKeyValue(key, value)
+	item := findItemByKeyValue(key, value)
 
 	input := &dynamodb.DeleteItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
 			KEY_UUID: {
-				S: aws.String(primaryKey),
+				S: aws.String(item.UUID),
 			},
 		},
 		TableName: aws.String(TABLE),
@@ -106,10 +106,10 @@ func DeleteItemByKeyValue(key string, value string) {
 }
 
 // return finder's uuid and other found uuid
-func FindOtherReadyItem(key string, value string) (string, string, bool) {
-	myPrimaryKey := findPrimaryKeyValue(key, value)
+func FindOtherReadyItem(key string, value string) (ConnectionItem, ConnectionItem, bool) {
+	item := findItemByKeyValue(key, value)
 
-	filt1 := expression.Name(KEY_UUID).NotEqual(expression.Value(myPrimaryKey))
+	filt1 := expression.Name(KEY_UUID).NotEqual(expression.Value(item.UUID))
 	filt2 := expression.Name(KEY_State).Equal(expression.Value(Ready.EnumIndex()))
 
 	expr, err := expression.NewBuilder().WithFilter(filt1.And(filt2)).Build()
@@ -132,9 +132,9 @@ func FindOtherReadyItem(key string, value string) (string, string, bool) {
 
 	if *result.Count == 0 {
 		log.Println("No ready item found")
-		return myPrimaryKey, "", false
+		return item, ConnectionItem{}, false
 	}
 
 	//return first find
-	return myPrimaryKey, *result.Items[0]["uuid"].S, true
+	return item, getConnectionItemFromResult(result), true
 }

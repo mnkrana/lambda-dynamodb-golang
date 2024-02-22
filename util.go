@@ -2,13 +2,14 @@ package lambda_dynamodb_golang
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 )
 
-func findPrimaryKeyValue(key string, value string) string {
+func findItemByKeyValue(key string, value string) ConnectionItem {
 	log.Printf("Find Primary key value of %v", value)
 
 	filt := expression.Name(key).Equal(expression.Value(value))
@@ -35,5 +36,19 @@ func findPrimaryKeyValue(key string, value string) string {
 	}
 
 	//return first find
-	return *result.Items[0]["uuid"].S
+	return getConnectionItemFromResult(result)
+}
+
+func getConnectionItemFromResult(result *dynamodb.ScanOutput) ConnectionItem {
+	state, err := strconv.Atoi(*result.Items[0][KEY_State].S)
+	if err != nil {
+		log.Println("Error in converting state!")
+	}
+	item := ConnectionItem{
+		UUID:               *result.Items[0][KEY_UUID].S,
+		MyConnectionID:     *result.Items[0][KEY_MyConnectionID].S,
+		FriendConnectionID: *result.Items[0][KEY_FriendConnectionID].S,
+		State:              state,
+	}
+	return item
 }
