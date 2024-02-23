@@ -13,6 +13,8 @@ var (
 )
 
 func getAWSConfig() {
-	REGION = os.Getenv(KEY_REGION)
-	TABLE = os.Getenv(KEY_TABLE)
+	if len(REGION) == 0 {
+		REGION = os.Getenv(KEY_REGION)
+		TABLE = os.Getenv(KEY_TABLE)
+	}
 }
