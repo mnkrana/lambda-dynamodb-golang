@@ -10,8 +10,6 @@ import (
 )
 
 func findItemByKeyValue(key string, value string) ConnectionItem {
-	log.Printf("Find Primary key value of %v", value)
-
 	filt := expression.Name(key).Equal(expression.Value(value))
 
 	expr, err := expression.NewBuilder().WithFilter(filt).Build()
@@ -41,22 +39,21 @@ func findItemByKeyValue(key string, value string) ConnectionItem {
 }
 
 func getConnectionItemFromResult(result *dynamodb.ScanOutput) ConnectionItem {
-
-	log.Printf("UUID %v", *result.Items[0][KEY_UUID].S)
-	log.Printf("MyConnectionID %v", *result.Items[0][KEY_MyConnectionID].S)
-	log.Printf("FriendConnectionID %v", *result.Items[0][KEY_FriendConnectionID].S)
-
 	state, err := strconv.Atoi(*result.Items[0][KEY_State].N)
 	if err != nil {
 		log.Println("Error in converting state!")
 	}
-	log.Printf("State %v", state)
 
+	player, err := strconv.Atoi(*result.Items[0][KEY_Player].N)
+	if err != nil {
+		log.Println("Error in converting player!")
+	}
 	item := ConnectionItem{
 		UUID:               *result.Items[0][KEY_UUID].S,
 		MyConnectionID:     *result.Items[0][KEY_MyConnectionID].S,
 		FriendConnectionID: *result.Items[0][KEY_FriendConnectionID].S,
 		State:              state,
+		Player:             player,
 	}
 	return item
 }
