@@ -3,8 +3,10 @@ package lambda_dynamodb_golang
 type State int
 
 const (
-	Ready State = iota + 1
-	Playing
+	Open State = iota + 1
+	Joined
+	Ready
+	SetPlayer
 )
 
 func (d State) EnumIndex() int {
