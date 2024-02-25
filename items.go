@@ -6,7 +6,6 @@ const (
 	Open State = iota + 1
 	Joined
 	Ready
-	SetPlayer
 )
 
 func (d State) EnumIndex() int {
