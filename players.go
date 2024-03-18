@@ -39,25 +39,3 @@ func PutNewPlayer(uuid string, playerDevice string) {
 		log.Printf("Error in puting item %v", err)
 	}
 }
-
-func UpdatePlayerByUUIDN(uuid string, key string, value string, action string) {
-	input := &dynamodb.UpdateItemInput{
-		Key: map[string]*dynamodb.AttributeValue{
-			KEY_UUID: {
-				S: aws.String(uuid),
-			},
-		},
-		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-			":newState": {
-				N: aws.String(value),
-			},
-		},
-		UpdateExpression: aws.String(action + " " + key + " = :newState"),
-		TableName:        aws.String(TABLE),
-	}
-
-	_, err := dynamodbSession.UpdateItem(input)
-	if err != nil {
-		log.Printf("Error in updaing item %v", err)
-	}
-}
