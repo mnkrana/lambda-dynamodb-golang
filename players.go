@@ -9,18 +9,18 @@ import (
 )
 
 type PlayerInfo struct {
-	UUID          string `json:"uuid"`
-	player_device string `json:"player_device"`
-	session_count int    `json:"session_count"`
-	is_online     int    `json:"is_online"`
+	UUID         string `json:"uuid"`
+	PlayerDevice string `json:"player_device"`
+	SessionCount int    `json:"session_count"`
+	IsOnline     int    `json:"is_online"`
 }
 
 func PutNewPlayer(uuid string, playerDevice string) {
 	playerInfo := PlayerInfo{
-		UUID:          uuid,
-		player_device: playerDevice,
-		session_count: 1,
-		is_online:     1,
+		UUID:         uuid,
+		PlayerDevice: playerDevice,
+		SessionCount: 1,
+		IsOnline:     1,
 	}
 
 	attributeValues, err := dynamodbattribute.MarshalMap(playerInfo)
