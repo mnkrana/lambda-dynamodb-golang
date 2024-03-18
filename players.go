@@ -9,10 +9,10 @@ import (
 )
 
 type PlayerInfo struct {
-	UUID          string
-	player_device string
-	session_count int
-	is_online     int
+	UUID          string `json:"uuid"`
+	player_device string `json:"player_device"`
+	session_count int    `json:"session_count"`
+	is_online     int    `json:"is_online"`
 }
 
 func PutNewPlayer(uuid string, playerDevice string) {
