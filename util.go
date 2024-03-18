@@ -57,3 +57,51 @@ func getConnectionItemFromResult(result *dynamodb.ScanOutput) ConnectionItem {
 	}
 	return item
 }
+
+func findPlayerByKeyValue(key string, value string) PlayerInfo {
+	filt := expression.Name(key).Equal(expression.Value(value))
+
+	expr, err := expression.NewBuilder().WithFilter(filt).Build()
+	if err != nil {
+		log.Fatalf("Got error building expression: %s", err)
+	}
+
+	params := &dynamodb.ScanInput{
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		FilterExpression:          expr.Filter(),
+		TableName:                 aws.String(TABLE),
+	}
+
+	result, err := dynamodbSession.Scan(params)
+	if err != nil {
+		log.Printf("Query API call failed: %s", err)
+	}
+
+	if *result.Count == 0 {
+		log.Println("No key found")
+		return PlayerInfo{}
+	}
+
+	//return first find
+	return getPlayerFromResult(result)
+}
+
+func getPlayerFromResult(result *dynamodb.ScanOutput) PlayerInfo {
+	session, err := strconv.Atoi(*result.Items[0]["session_count"].N)
+	if err != nil {
+		log.Println("Error in converting state!")
+	}
+
+	online, err := strconv.Atoi(*result.Items[0]["is_online"].N)
+	if err != nil {
+		log.Println("Error in converting player!")
+	}
+	playerInfo := PlayerInfo{
+		UUID:          *result.Items[0]["uuid"].S,
+		player_device: *result.Items[0]["player_device"].S,
+		session_count: session,
+		is_online:     online,
+	}
+	return playerInfo
+}

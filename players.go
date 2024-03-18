@@ -39,3 +39,7 @@ func PutNewPlayer(uuid string, playerDevice string) {
 		log.Printf("Error in puting item %v", err)
 	}
 }
+
+func GetPlayerInfo(uuid string) PlayerInfo {
+	return findPlayerByKeyValue("uuid", uuid)
+}
