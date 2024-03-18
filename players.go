@@ -15,11 +15,11 @@ type PlayerInfo struct {
 	online  int    `json:"online"`
 }
 
-func PutNewPlayer(uuid string, device string) {
-	log.Printf("add new player with %v in db", uuid)
+func PutNewPlayer(uuid string, playerDevice string) {
+	log.Printf("add new player with uuid - %v and device %v in db", uuid, playerDevice)
 	playerInfo := PlayerInfo{
 		UUID:    uuid,
-		device:  device,
+		device:  playerDevice,
 		session: 1,
 		online:  1,
 	}
