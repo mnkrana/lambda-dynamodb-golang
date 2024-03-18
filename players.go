@@ -16,6 +16,7 @@ type PlayerInfo struct {
 }
 
 func PutNewPlayer(uuid string) {
+	log.Printf("add new player with %v in db", uuid)
 	playerInfo := PlayerInfo{
 		UUID:    uuid,
 		device:  "Empty",
