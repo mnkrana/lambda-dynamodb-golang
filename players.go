@@ -15,13 +15,13 @@ type PlayerInfo struct {
 	online  int    `json:"online"`
 }
 
-func PutNewPlayer(uuid string) {
+func PutNewPlayer(uuid string, device string) {
 	log.Printf("add new player with %v in db", uuid)
 	playerInfo := PlayerInfo{
 		UUID:    uuid,
-		device:  "Empty",
+		device:  device,
 		session: 1,
-		online:  0,
+		online:  1,
 	}
 
 	attributeValues, _ := dynamodbattribute.MarshalMap(playerInfo)
@@ -34,5 +34,27 @@ func PutNewPlayer(uuid string) {
 	_, err := dynamodbSession.PutItem(input)
 	if err != nil {
 		log.Printf("Error in puting item %v", err)
+	}
+}
+
+func UpdatePlayerByUUIDN(uuid string, key string, value string, action string) {
+	input := &dynamodb.UpdateItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			KEY_UUID: {
+				S: aws.String(uuid),
+			},
+		},
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
+			":newState": {
+				N: aws.String(value),
+			},
+		},
+		UpdateExpression: aws.String(action + " " + key + " = :newState"),
+		TableName:        aws.String(TABLE),
+	}
+
+	_, err := dynamodbSession.UpdateItem(input)
+	if err != nil {
+		log.Printf("Error in updaing item %v", err)
 	}
 }
