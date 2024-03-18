@@ -9,10 +9,10 @@ import (
 )
 
 type PlayerInfo struct {
-	UUID          string `json:"uuid"`
-	player_device string `json:"player_device"`
-	session_count int    `json:"session_count"`
-	is_online     int    `json:"is_online"`
+	UUID          string
+	player_device string
+	session_count int
+	is_online     int
 }
 
 func PutNewPlayer(uuid string, playerDevice string) {
@@ -23,14 +23,18 @@ func PutNewPlayer(uuid string, playerDevice string) {
 		is_online:     1,
 	}
 
-	attributeValues, _ := dynamodbattribute.MarshalMap(playerInfo)
+	attributeValues, err := dynamodbattribute.MarshalMap(playerInfo)
+
+	if err != nil {
+		log.Printf("Error in marshal map %v output is %v", playerInfo, attributeValues)
+	}
 
 	input := &dynamodb.PutItemInput{
 		Item:      attributeValues,
 		TableName: aws.String(TABLE),
 	}
 
-	_, err := dynamodbSession.PutItem(input)
+	_, err = dynamodbSession.PutItem(input)
 	if err != nil {
 		log.Printf("Error in puting item %v", err)
 	}
