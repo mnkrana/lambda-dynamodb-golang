@@ -98,10 +98,10 @@ func getPlayerFromResult(result *dynamodb.ScanOutput) PlayerInfo {
 		log.Println("Error in converting player!")
 	}
 	playerInfo := PlayerInfo{
-		UUID:          *result.Items[0]["uuid"].S,
-		player_device: *result.Items[0]["player_device"].S,
-		session_count: session,
-		is_online:     online,
+		UUID:         *result.Items[0]["uuid"].S,
+		PlayerDevice: *result.Items[0]["player_device"].S,
+		SessionCount: session,
+		IsOnline:     online,
 	}
 	return playerInfo
 }
