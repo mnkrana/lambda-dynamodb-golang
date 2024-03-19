@@ -38,7 +38,7 @@ func findItemByKeyValue(key string, value string) ConnectionItem {
 	return getConnectionItemFromResult(result)
 }
 
-func GetTotal(key string, value int) ConnectionItem {
+func GetTotal(key string, value int) int {
 	filt := expression.Name(key).GreaterThan(expression.Value(value))
 
 	expr, err := expression.NewBuilder().WithFilter(filt).Build()
@@ -60,11 +60,11 @@ func GetTotal(key string, value int) ConnectionItem {
 
 	if *result.Count == 0 {
 		log.Println("No key found")
-		return ConnectionItem{}
+		return 0
 	}
 
 	//return first find
-	return getConnectionItemFromResult(result)
+	return int(*result.Count)
 }
 
 func getConnectionItemFromResult(result *dynamodb.ScanOutput) ConnectionItem {
