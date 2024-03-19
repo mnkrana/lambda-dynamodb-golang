@@ -58,12 +58,6 @@ func GetTotal(key string, value int) int {
 		log.Printf("Query API call failed: %s", err)
 	}
 
-	if *result.Count == 0 {
-		log.Println("No key found")
-		return 0
-	}
-
-	//return first find
 	return int(*result.Count)
 }
 
