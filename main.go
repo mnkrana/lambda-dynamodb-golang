@@ -111,7 +111,7 @@ func FindOtherReadyItem(key string, value string) (ConnectionItem, ConnectionIte
 	item := findItemByKeyValue(key, value)
 
 	filt1 := expression.Name(KEY_UUID).NotEqual(expression.Value(item.UUID))
-	filt2 := expression.Name(KEY_State).Equal(expression.Value(Open.EnumIndex()))
+	filt2 := expression.Name(KEY_State).Equal(expression.Value(Ready.EnumIndex()))
 
 	expr, err := expression.NewBuilder().WithFilter(filt1.And(filt2)).Build()
 
