@@ -21,7 +21,7 @@ func PutNewItem(connectionID string) {
 		UUID:               uuid.New().String(),
 		MyConnectionID:     connectionID,
 		FriendConnectionID: "Empty",
-		State:              int(Open),
+		State:              1,
 	}
 
 	attributeValues, _ := dynamodbattribute.MarshalMap(connectionItem)
@@ -107,11 +107,11 @@ func DeleteItemByKeyValue(key string, value string) {
 }
 
 // return finder's uuid and other found uuid
-func FindOtherReadyItem(key string, value string) (ConnectionItem, ConnectionItem, bool) {
+func FindOtherReadyItem(key string, value string, ready int) (ConnectionItem, ConnectionItem, bool) {
 	item := findItemByKeyValue(key, value)
 
 	filt1 := expression.Name(KEY_UUID).NotEqual(expression.Value(item.UUID))
-	filt2 := expression.Name(KEY_State).Equal(expression.Value(Ready.EnumIndex()))
+	filt2 := expression.Name(KEY_State).Equal(expression.Value(ready))
 
 	expr, err := expression.NewBuilder().WithFilter(filt1.And(filt2)).Build()
 

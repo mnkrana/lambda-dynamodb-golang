@@ -1,17 +1,5 @@
 package lambda_dynamodb_golang
 
-type State int
-
-const (
-	Open State = iota + 1
-	Joined
-	Ready
-)
-
-func (d State) EnumIndex() int {
-	return int(d)
-}
-
 type Player int
 
 const (
