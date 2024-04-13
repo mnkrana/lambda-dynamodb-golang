@@ -116,15 +116,11 @@ func getPlayerFromResult(result *dynamodb.ScanOutput) PlayerInfo {
 		log.Println("Error in converting state!")
 	}
 
-	online, err := strconv.Atoi(*result.Items[0]["is_online"].N)
-	if err != nil {
-		log.Println("Error in converting player!")
-	}
 	playerInfo := PlayerInfo{
 		UUID:         *result.Items[0]["uuid"].S,
 		PlayerDevice: *result.Items[0]["player_device"].S,
 		SessionCount: session,
-		IsOnline:     online,
+		DeviceID:     *result.Items[0]["device_id"].S,
 	}
 	return playerInfo
 }
