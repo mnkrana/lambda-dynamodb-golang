@@ -12,7 +12,6 @@ type PlayerInfo struct {
 	UUID         string `json:"uuid"`
 	PlayerDevice string `json:"player_device"`
 	SessionCount int    `json:"session_count"`
-	DeviceID     string `json:"device_id"`
 }
 
 func PutNewPlayer(uuid string, playerDevice string) {
@@ -20,7 +19,6 @@ func PutNewPlayer(uuid string, playerDevice string) {
 		UUID:         uuid,
 		PlayerDevice: playerDevice,
 		SessionCount: 1,
-		DeviceID:     "Empty",
 	}
 
 	attributeValues, err := dynamodbattribute.MarshalMap(playerInfo)
