@@ -61,6 +61,28 @@ func GetTotal(key string, value int) int {
 	return int(*result.Count)
 }
 
+func GetGameConfig() dynamodb.ScanOutput {
+	filt := expression.Name("id").Equal(expression.Value(0))
+	expr, err := expression.NewBuilder().WithFilter(filt).Build()
+	if err != nil {
+		log.Fatalf("Got error building expression: %s", err)
+	}
+
+	params := &dynamodb.ScanInput{
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		FilterExpression:          expr.Filter(),
+		TableName:                 aws.String(GAME_CONFIG_TABLE),
+	}
+
+	result, err := dynamodbSession.Scan(params)
+	if err != nil {
+		log.Printf("Query API call failed: %s", err)
+	}
+
+	return *result
+}
+
 func getConnectionItemFromResult(result *dynamodb.ScanOutput) ConnectionItem {
 	state, err := strconv.Atoi(*result.Items[0][KEY_State].N)
 	if err != nil {
