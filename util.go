@@ -120,7 +120,6 @@ func getPlayerFromResult(result *dynamodb.ScanOutput) PlayerInfo {
 		UUID:         *result.Items[0]["uuid"].S,
 		PlayerDevice: *result.Items[0]["player_device"].S,
 		SessionCount: session,
-		DeviceID:     *result.Items[0]["device_id"].S,
 	}
 	return playerInfo
 }
