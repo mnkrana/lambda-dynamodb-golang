@@ -26,5 +26,5 @@ type ConnectionItem struct {
 	FriendConnectionID string `json:"friendConnectionID"`
 	State              int    `json:"clientState"`
 	Player             int    `json:"player"`
-	PlayerUUID         int    `json:"playerUUID"`
+	PlayerUUID         string `json:"playerUUID"`
 }
