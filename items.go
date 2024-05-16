@@ -17,6 +17,7 @@ const (
 	KEY_FriendConnectionID = "friendConnectionID"
 	KEY_State              = "clientState"
 	KEY_Player             = "player"
+	KEY_PlayerUUID         = ""
 )
 
 type ConnectionItem struct {
@@ -25,4 +26,5 @@ type ConnectionItem struct {
 	FriendConnectionID string `json:"friendConnectionID"`
 	State              int    `json:"clientState"`
 	Player             int    `json:"player"`
+	PlayerUUID         int    `json:"playerUUID"`
 }
