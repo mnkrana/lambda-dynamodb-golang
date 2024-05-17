@@ -17,7 +17,7 @@ const (
 	KEY_FriendConnectionID = "friendConnectionID"
 	KEY_State              = "clientState"
 	KEY_Player             = "player"
-	KEY_PlayerUUID         = ""
+	KEY_PlayerUUID         = "playerUUID"
 )
 
 type ConnectionItem struct {
