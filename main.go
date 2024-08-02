@@ -22,6 +22,9 @@ func PutNewItem(connectionID string) {
 		MyConnectionID:     connectionID,
 		FriendConnectionID: "Empty",
 		State:              1,
+		Player:             0,
+		Address:            "Empty",
+		ContestID:          0,
 	}
 
 	attributeValues, _ := dynamodbattribute.MarshalMap(connectionItem)
