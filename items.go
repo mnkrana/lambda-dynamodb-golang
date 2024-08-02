@@ -32,5 +32,5 @@ type ConnectionItem struct {
 	Player             int    `json:"player"`
 	PlayerUUID         string `json:"playerUUID"`
 	Address            string `json:"address"`
-	ContestID          int    `json:"constestID"`
+	ContestID          int    `json:"contestID"`
 }
