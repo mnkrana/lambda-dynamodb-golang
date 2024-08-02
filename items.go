@@ -19,6 +19,8 @@ const (
 	KEY_State_Name         = "clientStateName"
 	KEY_Player             = "player"
 	KEY_PlayerUUID         = "playerUUID"
+	KEY_Address            = "address"
+	KEY_ContestID          = "contestID"
 )
 
 type ConnectionItem struct {
@@ -29,4 +31,6 @@ type ConnectionItem struct {
 	StateName          int    `json:"clientStateName"`
 	Player             int    `json:"player"`
 	PlayerUUID         string `json:"playerUUID"`
+	Address            string `json:"address"`
+	ContestID          int    `json:"constestID"`
 }

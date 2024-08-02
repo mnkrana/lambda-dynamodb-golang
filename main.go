@@ -112,8 +112,9 @@ func FindOtherReadyItem(key string, value string, ready int) (ConnectionItem, Co
 
 	filt1 := expression.Name(KEY_UUID).NotEqual(expression.Value(item.UUID))
 	filt2 := expression.Name(KEY_State).Equal(expression.Value(ready))
+	filt3 := expression.Name(KEY_ContestID).Equal(expression.Value(item.ContestID))
 
-	expr, err := expression.NewBuilder().WithFilter(filt1.And(filt2)).Build()
+	expr, err := expression.NewBuilder().WithFilter(filt1.And(filt2).And(filt3)).Build()
 
 	if err != nil {
 		log.Fatalf("Got error building expression: %s", err)
