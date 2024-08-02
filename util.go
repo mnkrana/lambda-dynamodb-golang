@@ -93,12 +93,20 @@ func getConnectionItemFromResult(result *dynamodb.ScanOutput) ConnectionItem {
 	if err != nil {
 		log.Println("Error in converting player!")
 	}
+
+	contestId, err := strconv.Atoi(*result.Items[0][KEY_ContestID].N)
+	if err != nil {
+		log.Println("Error in converting contest Id!")
+	}
+
 	item := ConnectionItem{
 		UUID:               *result.Items[0][KEY_UUID].S,
 		MyConnectionID:     *result.Items[0][KEY_MyConnectionID].S,
 		FriendConnectionID: *result.Items[0][KEY_FriendConnectionID].S,
 		State:              state,
 		Player:             player,
+		Address:            *result.Items[0][KEY_Address].S,
+		ContestID:          contestId,
 	}
 	return item
 }
